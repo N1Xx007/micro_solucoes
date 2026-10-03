@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Micro Soluções</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ====== CORES E MEDIDAS (edite aqui) ====== */
+  :root {
+    --branco: #ffffff;
+    --preto: #1a1a1a;
+    --corpo: #4a4a4a;
+    --verde: #22b14c;
+    --verde-escuro: #1b8f3d;
+    --vermelho: #e63329;
+    --caixa: #f3f3f3;
+    --linha: #e2e2e2;
+    --col: min(660px, 100% - 2.25rem);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--branco); color: var(--corpo);
+    font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  img, video { display: block; max-width: 100%; }
+  ul { list-style: none; }
+
+  .wrap { width: var(--col); margin-inline: auto; }
+  section { padding-block: 2.5rem; background: var(--fundo-secao); }
+  section:nth-of-type(odd)  { --fundo-secao: var(--caixa);  --fundo-cartao: var(--branco); }
+  section:nth-of-type(even) { --fundo-secao: var(--branco); --fundo-cartao: var(--caixa); }
+
+  h1, h2, h3, h4 { color: var(--preto); line-height: 1.22; letter-spacing: -0.02em; }
+  h1 { font-weight: 800; font-size: clamp(0.95rem, 4.9vw, 2.2rem); text-transform: uppercase; text-wrap: balance; }
+  h1 .linha, h1 .destaque { display: block; }
+  h1 .destaque { font-size: 1.25em; }
+  h1 .destaque .padrao { font-size: 0.8em; }
+  h1 .sublinhado { text-decoration: underline var(--verde) 4px; text-underline-offset: 3px; }
+  h1 .verde { display: inline; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  h2 { font-weight: 800; font-size: clamp(1.2rem, 4.8vw, 1.55rem); text-transform: uppercase; text-align: center; }
+  h3 { font-size: 1rem; font-weight: 700; }
+  h4 { font-size: 0.9375rem; font-weight: 700; }
+  p { margin: 0 0 0.9rem; }
+  p:last-child { margin-bottom: 0; }
+  b, strong { color: var(--preto); font-weight: 700; }
+
+  .verde, .vermelho { display: inline-block; padding: 0.05em 0.3em; color: var(--branco); border-radius: 2px; }
+  .verde { background: var(--verde); }
+  .vermelho { background: var(--vermelho); }
+  .t-verde { color: var(--verde); }
+  .num { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .centro { text-align: center; }
+  .mk { flex: 0 0 auto; font-size: 1rem; line-height: 1.45; }
+  .mt { margin-top: 1rem; }
+
+  /* Placeholder de imagem — troque por <img src="..."> */
+  .ph { background: repeating-linear-gradient(45deg, #e6e6e6 0 10px, #eeeeee 10px 20px); display: grid; place-items: center; color: #9a9a9a; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; text-align: center; width: 100%; height: 100%; }
+  .ph.escuro { background: repeating-linear-gradient(45deg, #1d1d1d 0 10px, #252525 10px 20px); color: #777; }
+
+  /* Tarja topo */
+  .tarja { background: var(--preto); color: var(--branco); text-align: center; padding: 0.55rem 1rem; margin: 0; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* Contador "ao vivo" */
+  .ao-vivo { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.5rem 1rem; background: var(--branco); border-bottom: 1px solid var(--linha); font-size: 0.8125rem; color: var(--corpo); }
+  .ao-vivo strong { color: var(--preto); font-variant-numeric: tabular-nums; display: inline-block; min-width: 3ch; text-align: right; transition: color .4s; }
+  .ao-vivo strong.mudou { color: var(--verde); }
+  .ao-vivo .ponto { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--vermelho); flex: 0 0 auto; }
+  .ao-vivo .ponto::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--vermelho); animation: pulso 1.6s ease-out infinite; }
+  @keyframes pulso { from { transform: scale(1); opacity: .7; } to { transform: scale(2.6); opacity: 0; } }
+
+  /* Herói */
+  .heroi { padding-block: 2rem 2.25rem; }
+  .heroi .apoio { margin: 0.9rem auto 0; max-width: 46ch; font-size: clamp(0.9375rem, 3.6vw, 1.0625rem); text-wrap: pretty; }
+  .player { max-width: 300px; margin: 1.5rem auto 0; }
+  .player .caixa-video { width: 100%; max-width: 400px; margin-inline: auto; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 6px; box-shadow: 0 24px 80px -32px rgba(34, 177, 76, 0.45); background: #111; position: relative; }
+  .player .caixa-video iframe, .player .caixa-video video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .provinha { display: flex; align-items: center; justify-content: center; gap: 0.7rem; margin-top: 1.1rem; flex-wrap: wrap; }
+  .estrelas { color: #f5a623; letter-spacing: 0.08em; }
+  .provinha p { margin: 0; font-size: 0.8125rem; }
+  .caras { display: flex; }
+  .cara { position: relative; width: 38px; height: 38px; border-radius: 999px; overflow: hidden; background: var(--caixa); box-shadow: 0 0 0 2px var(--branco); margin-left: -10px; }
+  .cara:first-child { margin-left: 0; }
+  .cara img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Listas e cartões */
+  .lista { margin: 1.4rem 0 0; }
+  .lista li { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.8rem 1rem; border: 1px solid var(--linha); border-bottom: 0; background: var(--fundo-cartao); }
+  .lista li:first-child { border-radius: 4px 4px 0 0; }
+  .lista li:last-child { border-bottom: 1px solid var(--linha); border-radius: 0 0 4px 4px; }
+
+  .modulos { display: grid; gap: 0.6rem; margin-top: 1.5rem; }
+  .modulo { display: flex; gap: 0.9rem; align-items: flex-start; background: var(--fundo-cartao); border: 1px solid var(--linha); border-radius: 6px; padding: 1rem 1.1rem; }
+  .modulo .icone { flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center; font-size: 1.35rem; background: var(--fundo-secao); border-radius: 8px; }
+  .modulo p { margin: 0.15rem 0 0; font-size: 0.875rem; line-height: 1.5; }
+  .valor { display: block; margin-top: 0.5rem; font-size: 0.75rem; font-weight: 700; color: var(--preto); text-transform: uppercase; }
+  .valor s { color: #8a8a8a; font-weight: 600; }
+  .valor .gratis { color: var(--verde); }
+
+  .duvidas { display: grid; gap: 0.7rem; margin-top: 1.5rem; }
+  .duvida { display: flex; gap: 0.9rem; align-items: flex-start; background: var(--fundo-cartao); border: 1px solid var(--linha); border-radius: 10px; padding: 1.2rem 1.15rem; }
+  .duvida .icone { flex: 0 0 auto; width: 42px; height: 42px; display: grid; place-items: center; font-size: 1.4rem; background: var(--fundo-secao); border-radius: 10px; }
+  .duvida h3 { font-size: 1.0625rem; line-height: 1.3; }
+  .duvida p { margin: 0.4rem 0 0; font-size: 0.9375rem; }
+
+  .caixa-lado { display: flex; gap: 0.8rem; align-items: flex-start; border: 1px solid var(--linha); border-radius: 4px; padding: 1rem 1.1rem; background: var(--fundo-cartao); margin-top: 0.7rem; }
+  .caixa-lado p { margin: 0; }
+  .caixa-lado.neg { border-left: 4px solid var(--vermelho); }
+  .caixa-lado.pos { border-left: 4px solid var(--verde); }
+
+  .rotulo-lado { margin: 1.5rem 0 0.6rem; font-weight: 800; font-size: 1rem; color: var(--preto); text-transform: uppercase; letter-spacing: -0.01em; }
+  .lado { display: flex; gap: 0.85rem; align-items: flex-start; padding: 1.1rem 1.15rem; background: var(--fundo-cartao); border: 1px solid var(--linha); border-radius: 8px; }
+  .lado p { margin: 0; font-size: 0.9375rem; }
+  .lado .marcador { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 999px; display: grid; place-items: center; color: var(--branco); font-size: 0.8125rem; font-weight: 700; line-height: 1; }
+  .lado-x { border-left: 4px solid var(--vermelho); }
+  .lado-x .marcador { background: var(--vermelho); }
+  .lado-v { border-left: 4px solid var(--verde); }
+  .lado-v .marcador { background: var(--verde); }
+
+  /* Botão */
+  .btn { display: block; width: 100%; max-width: 440px; margin: 1.75rem auto 0; padding: 1.05rem 1.1rem; background: var(--verde); color: var(--branco); border: 0; border-radius: 999px; font-weight: 800; font-size: clamp(0.85rem, 3.4vw, 1rem); text-transform: uppercase; text-align: center; text-decoration: none; box-shadow: 0 4px 0 var(--verde-escuro); transition: transform .1s, box-shadow .1s; }
+  .btn:hover { transform: translateY(2px); box-shadow: 0 2px 0 var(--verde-escuro); }
+  .btn:active { transform: translateY(4px); box-shadow: none; }
+  .btn-wpp { background: #1f9e42; box-shadow: 0 4px 0 #157a31; }
+  .btn-wpp:hover { box-shadow: 0 2px 0 #157a31; }
+
+  /* Sobre */
+  .cartao { border: 1px solid var(--linha); border-radius: 8px; padding: 1.4rem 1.2rem; background: var(--branco); box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .cartao h3 { margin: 1.1rem 0 0.8rem; }
+  .retrato { position: relative; width: 100%; aspect-ratio: 1983 / 793; border-radius: 24px; overflow: hidden; background: var(--caixa); }
+  .retrato img { width: 100%; height: 100%; object-fit: cover; }
+  .redes { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 1.25rem 0 0; }
+  .redes a { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.85rem; border: 1px solid var(--linha); border-radius: 999px; background: var(--branco); color: var(--preto); font-size: 0.8125rem; font-weight: 700; text-decoration: none; min-height: 40px; }
+  .redes svg { width: 18px; height: 18px; color: var(--verde); }
+
+  /* Carrossel de provas (rolagem infinita) */
+  .prova-rail { margin-top: 1.5rem; overflow: hidden; }
+  .prova-track { display: flex; gap: 0.75rem; width: max-content; padding-inline: 1rem; animation: prova-scroll 60s linear infinite; }
+  .prova-rail:hover .prova-track { animation-play-state: paused; }
+  .prova-track li { height: 340px; aspect-ratio: 9 / 16; flex: none; overflow: hidden; border-radius: 6px; background: #101314; }
+  .prova-track li img { height: 100%; width: auto; object-fit: contain; }
+  @keyframes prova-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (min-width: 640px) { .prova-track li { height: 420px; } }
+  @media (min-width: 1024px) { .prova-track li { height: 460px; } }
+
+  /* Banners de bônus */
+  .banners { display: flex; gap: 0.6rem; margin: 1.5rem 0 2.5rem; padding: 0 max(1.125rem, calc((100% - var(--col)) / 2)); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .banners::-webkit-scrollbar { display: none; }
+  @media (min-width: 1120px) { .banners { justify-content: safe center; padding-inline: 1.125rem; } }
+  .banners li { position: relative; flex: 0 0 auto; scroll-snap-align: start; width: 42vw; max-width: 170px; aspect-ratio: 9 / 16; border-radius: 6px; overflow: hidden; background: var(--caixa); border: 1px solid var(--linha); }
+  .banners li img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Depoimentos em vídeo */
+  .videos { display: flex; gap: 0.625rem; max-width: 64rem; margin: 1.5rem auto 0; padding-inline: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .videos::-webkit-scrollbar { display: none; }
+  .videos li { position: relative; aspect-ratio: 9 / 16; width: 38vw; max-width: 190px; flex: none; scroll-snap-align: start; overflow: hidden; border-radius: 6px; background: #101314; }
+  @media (min-width: 640px) { .videos { gap: 0.75rem; } .videos li { width: 180px; max-width: none; } }
+  @media (min-width: 1024px) { .videos li { width: 200px; } }
+  .videos video { width: 100%; height: 100%; object-fit: cover; }
+  .videos .play { position: absolute; inset: 0; display: grid; place-items: center; background: none; border: 0; cursor: pointer; }
+  .videos .play span { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; background: rgba(8,9,10,.7); color: #d1fe18; font-size: 0.875rem; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); backdrop-filter: blur(8px); }
+  .videos li.tocando .play { display: none; }
+  .videos .legenda { pointer-events: none; position: absolute; inset-inline: 0; bottom: 0; padding: 1.5rem 0.5rem 0.5rem; background: linear-gradient(to top, rgba(8,9,10,.9), transparent); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #d1fe18; text-transform: uppercase; }
+
+  /* Oferta */
+  .stack { margin-top: 1.5rem; text-align: left; }
+  .stack li { display: flex; gap: 0.6rem; align-items: baseline; padding: 0.75rem 1rem; background: var(--branco); border: 1px solid var(--linha); border-bottom: 0; font-size: 0.9125rem; }
+  .stack li:last-child { border-bottom: 1px solid var(--linha); }
+  .stack li span:last-child { margin-left: auto; font-weight: 700; color: var(--preto); font-variant-numeric: tabular-nums; text-decoration: line-through var(--vermelho) 2px; white-space: nowrap; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; padding: 0.85rem 1rem; background: var(--preto); color: var(--branco); border-radius: 0 0 6px 6px; font-weight: 700; }
+  .oferta-caixa { background: var(--caixa); border-radius: 10px; padding: 1.75rem 1.25rem 2rem; margin-top: 1.5rem; text-align: center; }
+  .de-por { font-weight: 700; color: var(--corpo); }
+  .de-por s { color: var(--vermelho); }
+  .parcela { font-size: clamp(2.4rem, 11vw, 3.4rem); font-weight: 800; color: var(--verde); line-height: 1.05; font-variant-numeric: tabular-nums; text-decoration: underline 4px; text-underline-offset: 6px; }
+
+  /* Garantia */
+  .garantia { display: flex; flex-direction: column; align-items: center; gap: 1.1rem; text-align: center; padding: 1.75rem 1.25rem; border-radius: 16px; background: #141414; border: 1px solid rgba(255,255,255,.1); }
+  @media (min-width: 640px) { .garantia { flex-direction: row; gap: 1.6rem; padding: 2rem 2.25rem; text-align: left; } }
+  .selo { flex: 0 0 auto; width: 118px; height: 118px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.18)); }
+  .selo svg { width: 100%; height: 100%; }
+  .garantia .etiqueta { display: inline-block; font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #4fd67f; }
+  .garantia h3 { margin-top: 0.35rem; font-size: 1.15rem; color: var(--branco); }
+  .garantia p { margin: 0.5rem 0 0; font-size: 0.9375rem; color: #cfcfcf; }
+  .garantia strong { color: var(--branco); }
+
+  /* FAQ */
+  .faq { margin-top: 1.5rem; border: 1px solid var(--linha); border-radius: 6px; overflow: hidden; background: var(--branco); }
+  .faq details { border-bottom: 1px solid var(--linha); }
+  .faq details:last-child { border-bottom: 0; }
+  .faq summary { cursor: pointer; list-style: none; padding: 1rem 1.1rem; font-weight: 700; color: var(--preto); display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9375rem; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::before { content: "▸"; color: var(--verde); flex: 0 0 auto; }
+  .faq details[open] summary::before { content: "▾"; }
+  .faq p { padding: 0 1.1rem 1.1rem 2.2rem; font-size: 0.9125rem; }
+
+  footer { padding: 2rem 0 3rem; }
+  footer p { font-size: 0.75rem; color: #8a8a8a; }
+
+  @media (max-width: 480px) {
+    section { padding-block: 2rem; }
+    .heroi { padding-block: 1.5rem 1.75rem; }
+    .provinha { flex-wrap: nowrap; gap: 0.6rem; }
+    .cara { width: 32px; height: 32px; }
+    .modulo { padding: 0.85rem 0.9rem; gap: 0.7rem; }
+    .modulo .icone { width: 34px; height: 34px; font-size: 1.15rem; }
+    .oferta-caixa { padding: 1.4rem 1rem 1.6rem; }
+    .stack li, .total { padding-inline: 0.8rem; }
+    .btn { padding: 1rem 0.9rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+    .prova-track { animation: none; }
+  }
+
+  /* ====== SEÇÕES 1–5 (layout Micro Soluções) ====== */
+  section.bg-branco { --fundo-secao: var(--branco); --fundo-cartao: #f6f6f6; }
+  section.bg-cinza { --fundo-secao: #f1f1f1; --fundo-cartao: var(--branco); }
+  section.bg-cinza-claro { --fundo-secao: #f8f8f8; --fundo-cartao: var(--branco); }
+  .verde { border-radius: 5px; padding: 0.02em 0.25em; }
+  section.bg-branco h2, section.bg-cinza h2 { text-wrap: wrap; letter-spacing: -0.03em; }
+  .sub { margin: 0.8rem auto 0; max-width: 56ch; font-size: 0.9375rem; }
+
+  .heroi h1 { font-size: min(4.6vw, 2rem); line-height: 1.2; letter-spacing: -0.03em; }
+  .heroi h1 .linha { white-space: nowrap; }
+  .heroi h1 .linha + .linha { margin-top: 0.08em; }
+  .heroi .player { max-width: 100%; margin-top: 1.6rem; }
+  .heroi .player .caixa-video { max-width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.45); }
+  .heroi .player .caixa-video img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); }
+  .heroi .apoio { max-width: 58ch; margin-top: 1.4rem; font-size: clamp(0.9375rem, 3.4vw, 1.0625rem); line-height: 1.65; }
+  .heroi .btn { box-shadow: 0 4px 0 var(--verde-escuro), 0 12px 24px -8px rgba(34,177,76,.55); }
+  .btn .seta { margin-left: 0.5rem; }
+  .heroi .provinha { gap: 0.8rem; }
+  .heroi .cara { box-shadow: 0 0 0 2px var(--branco); margin-left: -8px; }
+  .heroi .cara:first-child { margin-left: 0; }
+  .notas { text-align: left; line-height: 1.3; }
+  .notas .estrelas { font-size: 0.95rem; }
+  .notas .estrelas .num { color: var(--preto); margin-left: 0.2rem; }
+  .notas p { font-size: 0.8125rem; color: var(--corpo); }
+
+  .beneficios { display: grid; gap: 0.75rem; margin-top: 1.6rem; }
+  .beneficio { display: flex; gap: 1.1rem; align-items: center; background: #f6f6f6; border: 1px solid var(--linha); border-radius: 10px; padding: 1.15rem 1.25rem; }
+  .beneficio .icone { flex: 0 0 auto; width: 56px; height: 56px; display: grid; place-items: center; background: var(--branco); border-radius: 12px; color: var(--verde); box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .beneficio .icone svg { width: 30px; height: 30px; }
+  .beneficio h3 { font-size: 1.0625rem; font-weight: 800; }
+  .beneficio p { margin: 0.35rem 0 0; font-size: 0.9rem; line-height: 1.55; }
+
+  .lista-x li { align-items: center; gap: 0.9rem; padding: 0.85rem 1.1rem; font-size: 0.9375rem; color: var(--preto); }
+  .x { color: var(--vermelho); font-weight: 800; font-size: 1.15rem; line-height: 1; flex: 0 0 auto; }
+  .fecho { margin-top: 1.2rem; font-size: 0.95rem; }
+
+  .bg-branco .caixa-lado { background: #f6f6f6; border-radius: 8px; padding: 1.3rem 1.3rem; gap: 1rem; margin-top: 0.9rem; font-size: 1rem; line-height: 1.65; }
+  .bg-branco .caixa-lado.neg { border-left-width: 4px; }
+  .caixa-lado .mk { font-size: 1.3rem; line-height: 1.3; }
+  .caixa-lado .mk.x { font-size: 1.4rem; }
+  .pergunta { margin-top: 1.6rem; font-size: 1.1rem; }
+  .pergunta + .btn { margin-top: 1.1rem; }
+
+  .bg-cinza-claro .cartao { border-radius: 16px; padding: 1rem 1rem 1.6rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+  .bg-cinza-claro .retrato { aspect-ratio: 572 / 280; border-radius: 18px; }
+  .bg-cinza-claro .cartao h3 { font-size: 1.15rem; font-weight: 800; margin: 1.2rem 0.4rem 1rem; }
+  .bg-cinza-claro .cartao p { padding-inline: 0.8rem; font-size: 0.975rem; line-height: 1.65; }
+  .bg-cinza-claro .redes { margin-top: 1.4rem; gap: 0.6rem; }
+  .bg-cinza-claro .redes a { padding: 0.65rem 1.3rem; min-height: 46px; font-size: 0.875rem; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+  .bg-cinza-claro .redes svg { color: var(--verde); }
+</style>
+</head>
+<body>
+
+<!-- ============ TARJA TOPO ============ -->
+<p class="tarja">Último dia para acessar é <span id="data-hoje">00/00</span></p>
+
+<!-- ============ CONTADOR "AO VIVO" ============ -->
+<div class="ao-vivo" aria-live="off">
+  <span class="ponto"></span>
+  <span><strong id="vendo">452</strong> pessoas estão vendo esta página agora</span>
+</div>
+
+<!-- ============ 1. HERÓI + VÍDEO ============ -->
+<section class="heroi bg-branco">
+  <div class="wrap centro">
+    <h1>
+      <span class="linha">Aprenda como não falir em até</span>
+      <span class="linha"><span class="verde">7 dias,</span></span>
+      <span class="linha">parar de perder dinheiro</span>
+      <span class="linha">e começar a <span class="verde">lucrar de verdade.</span></span>
+    </h1>
+
+    <div class="player">
+      <!-- Para usar o vídeo real, troque o conteúdo deste bloco pelo embed (vturb, YouTube, Panda etc.) -->
+      <div class="caixa-video">
+        <img src="img/thumb-video.jpg" alt="Micro Soluções — Pequenas soluções. Grandes impactos.">
+      </div>
+    </div>
+
+    <p class="apoio">Não importa se hoje sua empresa está desorganizada: aprenda as <strong>Micro Soluções</strong> e descubra, em apenas <strong>7 dias</strong>, como pequenas correções na gestão podem gerar <strong>grandes impactos</strong> na organização, no controle e nos lucros da sua empresa.</p>
+    <a class="btn" href="#oferta">Quero começar agora <span class="seta">→</span></a>
+
+    <div class="provinha">
+      <div class="caras">
+        <span class="cara"><img src="img/cara1.jpg" alt=""></span>
+        <span class="cara"><img src="img/cara2.jpg" alt=""></span>
+        <span class="cara"><img src="img/cara3.jpg" alt=""></span>
+        <span class="cara"><img src="img/cara4.jpg" alt=""></span>
+        <span class="cara"><img src="img/cara5.jpg" alt=""></span>
+      </div>
+      <div class="notas">
+        <div class="estrelas">★★★★★ <strong class="num">5,0</strong></div>
+        <p>+2.500 empresários impactados</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. DECISÃO ============ -->
+<section class="bg-branco">
+  <div class="wrap">
+    <h2>Você está diante da decisão que pode gerar <span class="verde">grandes impactos</span> na sua empresa</h2>
+    <p class="centro sub">Com as Micro Soluções, pequenas correções na gestão podem transformar o controle, a organização e os lucros do seu negócio.</p>
+    <div class="beneficios">
+      <div class="beneficio">
+        <span class="icone"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3z"/><path d="M5 13.2v4L12 21l7-3.8v-4L12 17l-7-3.8z"/></svg></span>
+        <div><h3>Você não precisa ser um especialista em gestão</h3><p>Em apenas 7 dias, você aprende de forma prática como enxergar os erros que travam sua empresa e o que precisa ser corrigido.</p></div>
+      </div>
+      <div class="beneficio">
+        <span class="icone"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="15" width="3" height="6" rx=".5"/><rect x="8" y="12" width="3" height="9" rx=".5"/><rect x="13" y="9" width="3" height="12" rx=".5"/><rect x="18" y="6" width="3" height="15" rx=".5"/><path d="M3 11 9 6l3 2 6-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 2.5h4v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div><h3>Você precisa de clareza, não de mais caos</h3><p>As Micro Soluções mostram como pequenas mudanças nos processos, no caixa e na administração podem gerar grandes resultados.</p></div>
+      </div>
+      <div class="beneficio">
+        <span class="icone"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.3 7.3 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.3 7.3 0 0 0 1.7-1l2.5 1 2-3.5L19.4 13zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg></span>
+        <div><h3>Você não precisa continuar apagando incêndios</h3><p>Quando você entende onde a empresa perde dinheiro, começa a tomar decisões melhores e a construir uma gestão mais lucrativa.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. SE VOCÊ AINDA ESTÁ... ============ -->
+<section class="bg-cinza">
+  <div class="wrap centro"><h2>Se você ainda está...</h2></div>
+  <div class="wrap">
+    <ul class="lista lista-x">
+      <li><span class="x">✕</span>Apagando incêndios todos os dias sem conseguir organizar a operação...</li>
+      <li><span class="x">✕</span>Sem saber exatamente para onde o dinheiro da empresa está indo...</li>
+      <li><span class="x">✕</span>Tomando decisões importantes sem olhar os números com clareza...</li>
+      <li><span class="x">✕</span>Com processos confusos, equipe desalinhada e falta de controle...</li>
+      <li><span class="x">✕</span>Trabalhando muito, faturando, mas sem ver lucro de verdade...</li>
+    </ul>
+    <p class="centro fecho"><strong>Então você está convivendo com grandes problemas por falta de Micro Soluções.</strong></p>
+  </div>
+</section>
+
+<!-- ============ 4. O JOGO MUDOU ============ -->
+<section class="bg-branco">
+  <div class="wrap">
+    <h2>O <span class="verde">jogo mudou</span>, e quem não se adaptar vai ficar pra trás</h2>
+    <p class="centro sub">Na gestão da sua empresa, você tem duas opções:</p>
+    <div class="caixa-lado neg"><span class="mk x">✕</span><p><strong>Ficar no mesmo lugar,</strong> apagando incêndios, tomando decisões no improviso e vendo o dinheiro da empresa sumir sem entender o motivo.</p></div>
+    <div class="caixa-lado pos"><span class="mk">✅</span><p><strong>Aplicar as Micro Soluções,</strong> corrigir pequenas falhas de gestão e transformar a organização, o controle e os lucros da sua empresa.</p></div>
+    <p class="centro pergunta"><strong>Qual você vai escolher?</strong></p>
+    <a class="btn" href="#oferta">Quero começar agora</a>
+  </div>
+</section>
+
+<!-- ============ 5. SOBRE O AUTOR ============ -->
+<section class="bg-cinza-claro">
+  <div class="wrap">
+    <div class="cartao">
+      <div class="retrato"><img src="img/autor.jpg" alt="Lucas Raphael"></div>
+      <h3 class="centro">Eu já estive exatamente onde você está agora...</h3>
+      <p>Me chamo <strong>Lucas Raphael</strong> e sei como é viver no caos da operação, apagar incêndios todos os dias e ver o dinheiro entrar sem enxergar lucro de verdade.</p>
+      <p>Durante essa jornada, percebi que <strong>grandes problemas</strong> quase sempre nascem de <strong>pequenas falhas na gestão</strong>. E quando você aprende a corrigir o pequeno, começa a transformar o grande.</p>
+      <p>Hoje, com as <strong>Micro Soluções,</strong> ajudo empresários a organizar processos, recuperar o controle e construir uma gestão mais lucrativa, com mais clareza, estratégia e impacto.</p>
+    </div>
+    <ul class="redes">
+      <li><a href="https://www.instagram.com/eusoulucasraphael/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><span>@eusoulucasraphael</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 6. CARROSSEL DE PROVAS (prints) ============ -->
+<section>
+  <div class="wrap centro">
+    <h2>Resultados <span class="verde">reais</span> dos alunos</h2>
+    <p class="mt">Texto de apoio falando sobre os prints e depoimentos abaixo.</p>
+  </div>
+  <div class="prova-rail">
+    <!-- Os itens são duplicados via JS para a rolagem ficar infinita. Troque as .ph por <img src="print.jpg"> -->
+    <ul class="prova-track" id="provas">
+      <li><div class="ph">Print 1</div></li>
+      <li><div class="ph">Print 2</div></li>
+      <li><div class="ph">Print 3</div></li>
+      <li><div class="ph">Print 4</div></li>
+      <li><div class="ph">Print 5</div></li>
+      <li><div class="ph">Print 6</div></li>
+      <li><div class="ph">Print 7</div></li>
+      <li><div class="ph">Print 8</div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 7. QUEBRA DE OBJEÇÕES ============ -->
+<section>
+  <div class="wrap">
+    <div class="duvidas">
+      <div class="duvida"><span class="icone">🤔</span><div><h3>Primeira objeção comum do cliente?</h3><p>Resposta que quebra essa objeção, com argumento e prova.</p></div></div>
+      <div class="duvida"><span class="icone">⏱️</span><div><h3>Segunda objeção comum do cliente?</h3><p>Resposta que quebra essa objeção, com argumento e prova.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. MÓDULOS / CONTEÚDO ============ -->
+<section>
+  <div class="wrap">
+    <h2 class="centro">O que você vai aprender <span class="verde">dentro</span></h2>
+    <div class="modulos">
+      <div class="modulo"><span class="icone">1️⃣</span><div><h4>Módulo 1 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">2️⃣</span><div><h4>Módulo 2 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">3️⃣</span><div><h4>Módulo 3 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">4️⃣</span><div><h4>Módulo 4 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">5️⃣</span><div><h4>Módulo 5 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">6️⃣</span><div><h4>Módulo 6 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">7️⃣</span><div><h4>Módulo 7 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+      <div class="modulo"><span class="icone">8️⃣</span><div><h4>Módulo 8 — Nome</h4><p>Resumo do que é ensinado neste módulo.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. DEPOIMENTOS EM VÍDEO ============ -->
+<section>
+  <div class="wrap centro">
+    <h2>Veja o que dizem <span class="verde">os alunos</span></h2>
+    <p class="mt">Texto de apoio apresentando os depoimentos em vídeo.</p>
+  </div>
+  <!-- Coloque o caminho do vídeo em data-src (ex.: videos/depo1.mp4) -->
+  <ul class="videos">
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 1</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 2</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 3</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 4</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 5</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 6</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 7</span></li>
+    <li><video playsinline preload="none" data-src=""></video><button class="play" aria-label="Reproduzir"><span>▶</span></button><span class="legenda">Aluno 8</span></li>
+  </ul>
+</section>
+
+<!-- ============ 11. DOIS CAMINHOS ============ -->
+<section>
+  <div class="wrap">
+    <h2>Agora você tem duas escolhas</h2>
+    <p class="rotulo-lado">Opção 1: não fazer nada</p>
+    <div class="lado lado-x"><span class="marcador">✕</span><p>Você <strong>continua igual</strong>, com os <strong>mesmos problemas de sempre</strong> e sem resultado.</p></div>
+    <p class="rotulo-lado">Opção 2: entrar hoje</p>
+    <div class="lado lado-v"><span class="marcador">✓</span><p>Você <strong>aplica o método</strong>, ganha <strong>tempo e resultado</strong> e muda o jogo.</p></div>
+  </div>
+</section>
+
+<!-- ============ 12. OFERTA ============ -->
+<section id="oferta">
+  <div class="wrap centro">
+    <h2>Tudo o que você vai receber hoje</h2>
+    <ul class="stack">
+      <li><span class="mk">✅</span><span>Produto principal</span><span>R$ 497</span></li>
+    </ul>
+    <div class="total"><span>Valor total</span><span>R$ 497</span></div>
+    <div class="oferta-caixa">
+      <p class="de-por">De <s>R$ 497</s> por</p>
+      <p>apenas <strong>12x</strong> de</p>
+      <p class="parcela">R$ 9,90</p>
+      <p>ou <strong>R$ 97</strong> à vista</p>
+      <p><strong>Acesso imediato por <span class="num">12</span> meses</strong></p>
+      <!-- LINK DO CHECKOUT -->
+      <a class="btn" href="#">Quero garantir minha vaga</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14. FAQ ============ -->
+<section>
+  <div class="wrap">
+    <h2 class="centro">Dúvidas frequentes</h2>
+    <div class="faq">
+      <details><summary>Pergunta frequente número 1?</summary><p>Resposta da pergunta.</p></details>
+      <details><summary>Pergunta frequente número 2?</summary><p>Resposta da pergunta.</p></details>
+      <details><summary>Pergunta frequente número 3?</summary><p>Resposta da pergunta.</p></details>
+      <details><summary>Pergunta frequente número 4?</summary><p>Resposta da pergunta.</p></details>
+      <details><summary>Pergunta frequente número 5?</summary><p>Resposta da pergunta.</p></details>
+      <details><summary>Pergunta frequente número 6?</summary><p>Resposta da pergunta.</p></details>
+    </div>
+    <!-- Troque pelo seu número: https://wa.me/55DDDNUMERO?text=... -->
+    <a class="btn btn-wpp" href="#">Ainda tem dúvida? Fale no WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap centro">
+    <p>Texto legal / aviso de isenção de resultados. Os resultados variam de pessoa para pessoa.</p>
+    <p>© <span id="ano"></span> Seu Nome. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<script>
+  // Contador "pessoas vendo agora": passeio aleatório suave que sempre volta para perto da média
+  (() => {
+    const BASE = 450, MIN = 405, MAX = 495;   // média e limites — ajuste aqui
+    const el = document.getElementById('vendo');
+    let valor = BASE + Math.round((Math.random() - 0.5) * 20);
+    try { const salvo = +sessionStorage.getItem('vendo'); if (salvo >= MIN && salvo <= MAX) valor = salvo; } catch (e) {}
+    let tendencia = 0;
+    el.textContent = valor;
+
+    function passo() {
+      // a tendência muda devagar, então o número sobe ou desce por alguns ciclos seguidos
+      tendencia = tendencia * 0.6 + (Math.random() - 0.5) * 4;
+      const volta = (BASE - valor) * 0.08;            // puxa de volta para a média
+      let delta = Math.round(tendencia + volta);
+      delta = Math.max(-4, Math.min(4, delta));        // nunca muda mais que 4 de uma vez
+      valor = Math.max(MIN, Math.min(MAX, valor + delta));
+      if (delta !== 0) {
+        el.textContent = valor;
+        el.classList.add('mudou');
+        setTimeout(() => el.classList.remove('mudou'), 600);
+        try { sessionStorage.setItem('vendo', valor); } catch (e) {}
+      }
+      setTimeout(passo, 3000 + Math.random() * 4000); // a cada 3–7 segundos
+    }
+    setTimeout(passo, 3000);
+  })();
+
+  // Data de hoje na tarja + ano no rodapé
+  const d = new Date();
+  document.getElementById('data-hoje').textContent =
+    String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+  document.getElementById('ano').textContent = d.getFullYear();
+
+  // Carrossel infinito: duplica os itens
+  const track = document.getElementById('provas');
+  track.innerHTML += track.innerHTML;
+  track.style.animationDuration = (track.children.length * 3.5) + 's';
+
+  // Depoimentos: toca um por vez
+  document.querySelectorAll('.videos li').forEach(li => {
+    const v = li.querySelector('video');
+    li.querySelector('.play').addEventListener('click', () => {
+      if (!v.src && v.dataset.src) v.src = v.dataset.src;
+      document.querySelectorAll('.videos video').forEach(o => { if (o !== v) { o.pause(); o.parentElement.classList.remove('tocando'); } });
+      v.controls = true; v.play(); li.classList.add('tocando');
+    });
+  });
+</script>
+</body>
+</html>
